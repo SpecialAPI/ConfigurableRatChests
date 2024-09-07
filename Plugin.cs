@@ -15,7 +15,7 @@ namespace ConfigurableRatChests
     {
         public const string GUID = "spapi.etg.configurableratchests";
         public const string NAME = "Configurable Rat Chests";
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.0.2";
 
         public static Gunfig gunfig;
 
