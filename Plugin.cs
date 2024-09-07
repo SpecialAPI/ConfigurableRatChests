@@ -27,6 +27,11 @@ namespace ConfigurableRatChests
 
         public const string USE_RAT_ITEMS = "Use rat items?";
 
+        public const string POOL_MODE = "Loot pool mode";
+        public const string POOL_MODE_RANDOM = "Random";
+        public const string POOL_MODE_ALLGUNS = "Always guns";
+        public const string POOL_MODE_ALLITEMS = "Always items";
+
         public const string D_WEIGHT = "D tier item weight";
         public const string C_WEIGHT = "C tier item weight";
         public const string B_WEIGHT = "B tier item weight";
@@ -68,6 +73,8 @@ namespace ConfigurableRatChests
             };
 
             gunfig.AddToggle(USE_RAT_ITEMS, true, USE_RAT_ITEMS.Yellow());
+
+            gunfig.AddScrollBox(POOL_MODE, [POOL_MODE_RANDOM, POOL_MODE_ALLGUNS, POOL_MODE_ALLITEMS], POOL_MODE.Cyan());
 
             gunfig.AddScrollBox(D_WEIGHT, weights,  D_WEIGHT.WithColor(new(1f, 0.5f, 0f)),  WeightSetCallback);
             gunfig.AddScrollBox(C_WEIGHT, weights,  C_WEIGHT.Blue(),                        WeightSetCallback);
@@ -181,6 +188,19 @@ namespace ConfigurableRatChests
                     continue;
 
                 SetWeightsAndUpdateRatChestChances(ch);
+
+                var poolmode = gunfig.Value(POOL_MODE);
+
+                if (poolmode == POOL_MODE_ALLGUNS)
+                    ch.lootTable.lootTable = GameManager.Instance.RewardManager.GunsLootTable;
+
+                if (poolmode == POOL_MODE_ALLITEMS)
+                    ch.lootTable.lootTable = GameManager.Instance.RewardManager.ItemsLootTable;
+
+                else
+                    ch.lootTable.lootTable = BraveUtility.RandomBool() ?
+                        GameManager.Instance.RewardManager.GunsLootTable :
+                        GameManager.Instance.RewardManager.ItemsLootTable;
 
                 if (gunfig.Enabled(USE_RAT_ITEMS))
                     continue;
